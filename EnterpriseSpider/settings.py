@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import os
 # Scrapy settings for EnterpriseSpider project
 #
 # For simplicity, this file contains only settings considered important or
@@ -64,9 +64,14 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'EnterpriseSpider.pipelines.EnterprisespiderPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'EnterpriseSpider.pipelines.JsonWithEncodingPipeline': 300,
+    #'scrapy.pipelines.images.ImagesPipeline': 1,    #设置scrapy自带的普票保存方法，后面设置数字是流经管道的顺序，数字小的先流经
+    'EnterpriseSpider.pipelines.ArticleImagePipeline': 1,
+}
+IMAGES_URLS_FIELD = "front_image_url"   #从item中提取图片的URL，前面的IMAGES_URLS_FIELD是固定写法
+project_dir = os.path.abspath(os.path.dirname(__file__))   #获取当前项目的路径
+IMAGES_STORE = os.path.join(project_dir, "images")  #设置图片存储的路径
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

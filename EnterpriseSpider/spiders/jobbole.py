@@ -3,6 +3,7 @@ import scrapy
 import re
 from scrapy.http import Request
 from urllib import parse
+from EnterpriseSpider.items import *
 
 
 class JobboleSpider(scrapy.Spider):
@@ -33,11 +34,12 @@ class JobboleSpider(scrapy.Spider):
     def parse_detail(self,response):
         print("目前爬取的URL是："+response.url)
         #提取文章的具体逻辑
-
+        article_item = JobBoleArticleItem()
+        front_image_url = response.meta.get("front_image_url", "")
         #  获取文章标题
         title = response.css('.entry-header h1::text').extract()[0]
         #  获取发布日期
-        date = response.css('.entry-meta .entry-meta-hide-on-mobile::text').extract()[0].strip().replace("·", "")
+        create_date = response.css('.entry-meta .entry-meta-hide-on-mobile::text').extract()[0].strip().replace("·", "")
         #  获取点赞数
         praise_num = response.css('.vote-post-up h10::text').extract()[0]
         #  获取收藏数
@@ -57,9 +59,11 @@ class JobboleSpider(scrapy.Spider):
 
         content = response.css('div.entry').extract()[0]
 
+        article_item["title"] = title
+        article_item["create_date"] =create_date
+        article_item["praise_num"] = praise_num
+        article_item["collect_num"] = collect_num
+        article_item["comment_num"] = comment_num
+        article_item["front_image_url"] = front_image_url
 
-        print(title+"\t"+"发布时间："+date+"\t"+str(praise_num)+"点赞"+"\t"+str(collect_num)+"收藏"+"\t"+str(comment_num)+"评论")
-        #date = response.xpath('//*[@id="post-110287"]/div[2]/p/text()').extract()[0].strip().replace("·", "")
-        #praise_num = response.xpath('//*[@id="110287votetotal"]/text()').extract()[0]
-        #collect_num = response.xpath('//*[@id="post-110287"]/div[3]/div[9]/span[2]/text()').extract()[0].split(" ")[1]
-        #comment_num = response.xpath('//*[@id="post-110287"]/div[3]/div[9]/a/span/text()').extract()[0].split(" ")[1]
+        yield article_item

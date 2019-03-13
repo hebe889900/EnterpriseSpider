@@ -15,3 +15,4 @@ class JobBoleArticleItem(scrapy.Item):
     collect_num = scrapy.Field()
     comment_num = scrapy.Field()
     front_image_url = scrapy.Field()
+
