@@ -8,7 +8,10 @@
 import scrapy
 
 
-class EnterprisespiderItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class JobBoleArticleItem(scrapy.Item):
+    title = scrapy.Field()
+    create_date = scrapy.Field()
+    praise_num = scrapy.Field()
+    collect_num = scrapy.Field()
+    comment_num = scrapy.Field()
+    front_image_url = scrapy.Field()
